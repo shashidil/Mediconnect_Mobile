@@ -26,6 +26,8 @@ android {
     namespace "com.example.medi_connect"
     compileSdk flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
+//    compileSdk 34 // Explicitly set compileSdkVersion to 33
+//    ndkVersion flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -37,10 +39,15 @@ android {
         applicationId "com.example.medi_connect"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
+       // minSdkVersion flutter.minSdkVersion
+        minSdk = 23
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+//        minSdkVersion 23 // Ensure minSdkVersion is at least 23
+//        targetSdkVersion 34 // Explicitly set targetSdkVersion to 33
+//        versionCode flutterVersionCode.toInteger()
+//        versionName flutterVersionName
     }
 
     buildTypes {

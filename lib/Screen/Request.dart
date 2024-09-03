@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import '../Model/PrescriptionDTO.dart';
 import 'AddMedication.dart';
+import 'ChatScreen.dart';
 
 class RequestCard extends StatelessWidget {
   final PrescriptionDTO data;
@@ -51,12 +52,11 @@ class RequestCard extends StatelessWidget {
   }
 
   void _contactUser(BuildContext context) {
-    // Navigator.of(context).push(MaterialPageRoute(
-    //   builder: (context) => AddMedicationScreen(
-    //     prescription: data,
-    //     onSuccess: onRemove, // Pass the remove callback
-    //   ),
-    // ));
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ChatScreen(receiverId: data.user.id, receiverName: data.user.name), // Pass the receiverId
+      ),
+    );
   }
 
   @override

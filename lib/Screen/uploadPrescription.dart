@@ -214,7 +214,7 @@ class _UploadPrescriptionState extends State<UploadPrescription> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CommonAppBar(),
+      appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Center(

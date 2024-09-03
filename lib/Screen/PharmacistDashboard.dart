@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:medi_connect/Screen/OverviewPage.dart';
 import 'package:medi_connect/Screen/PrescriptionListScreen.dart';
+import 'package:medi_connect/Screen/SendInquiryPage.dart';
 import 'package:medi_connect/Sevices/Auth/UserSession.dart';
 import 'package:medi_connect/Widget/Common/PharmacistMenu.dart';
 import '../Sevices/API/UploadPriscriptionAPI.dart';
 import '../Sevices/Auth/AuthHeader.dart';
  // Ensure you have this path correct
 import '../Model/PrescriptionDTO.dart';
+import 'ChatListScreen.dart';
 import 'Login.dart';
 import '../Widget/Common/CommonAppBar.dart';
+import 'OrderHistoryScreen.dart';
+import 'SettingsPage.dart';
 
 class PharmacistDashboard extends StatelessWidget {
   const PharmacistDashboard({super.key});
@@ -54,6 +59,21 @@ class PharmacistDashboard extends StatelessWidget {
     }
   }
 
+  Future<void> _setting(BuildContext context) async {
+    String? userId = await UserSession.getUserId();
+
+    if (userId != null) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => SettingsPage(userId: userId),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: User ID not found.')),
+      );
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,11 +89,44 @@ class PharmacistDashboard extends StatelessWidget {
           if (menuItem == 'Logout') {
             _logout(context);
           }
+          if (menuItem == 'Chats') {
+            // Navigate to the OrderHistoryScreen for patients
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => ChatListScreen(),
+              ),
+            );
+          }
+          if (menuItem == 'Orders') {
+            // Navigate to the OrderHistoryScreen for patients
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const OrderHistoryScreen(isPharmacist: true),
+              ),
+            );
+          }
+          if (menuItem == 'Overview') {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) =>  OverviewPage(),
+              ),
+            );
+          }
+          if (menuItem == 'Settings') {
+            _setting(context);
+          }
+          if (menuItem == 'Support') {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) =>  SendInquiryPage(),
+              ),
+            );
+          }
+
         },
+
       ),
-      body: const Center(
-        child: Text("Welcome to Pharmacist Dashboard"),
-      ),
+      body: OverviewPage(),
     );
   }
 }

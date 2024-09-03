@@ -10,7 +10,7 @@ class InvoiceAPI {
 
     // Get the authorization header with the JWT token
     final headers = await AuthHeader.getAuthHeader();
-    headers['Content-Type'] = 'application/json'; // Add Content-Type to headers
+    headers['Content-Type'] = 'application/json';
 
     final body = jsonEncode(formData);
 

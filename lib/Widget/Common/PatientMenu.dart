@@ -62,13 +62,13 @@ class PatientMenu extends StatelessWidget {
               }
             },
           ),
-          ListTile(
-            leading: const Icon(Icons.dashboard),
-            title: const Text('Overview'),
-            onTap: () {
-              onMenuItemSelected('Overview');
-            },
-          ),
+          // ListTile(
+          //   leading: const Icon(Icons.dashboard),
+          //   title: const Text('Overview'),
+          //   onTap: () {
+          //     onMenuItemSelected('Overview');
+          //   },
+          // ),
           ListTile(
             leading: const Icon(Icons.upload_file),
             title: const Text('Prescription'),
@@ -102,6 +102,13 @@ class PatientMenu extends StatelessWidget {
             title: const Text('Settings'),
             onTap: () {
               onMenuItemSelected('Settings');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.help_center),
+            title: const Text('Support'),
+            onTap: () {
+              onMenuItemSelected('Support');
             },
           ),
           ListTile(

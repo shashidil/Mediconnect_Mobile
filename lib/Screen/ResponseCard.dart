@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../Model/ResponseData.dart';
+import 'ChatScreen.dart';
 import 'PaymentScreen.dart';
 
 class ResponseCard extends StatelessWidget {
@@ -23,11 +24,11 @@ class ResponseCard extends StatelessWidget {
 
 
   void _orderMedications(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => PaymentScreen(data: data), // Pass the ResponseData to PaymentScreen
-      ),
-    );
+    // Navigator.of(context).push(
+    //   MaterialPageRoute(
+    //     builder: (context) => PaymentScreen(data: data), // Pass the ResponseData to PaymentScreen
+    //   ),
+    // );
   }
 
   void _showDetailsModal(BuildContext context) {
@@ -111,7 +112,18 @@ class ResponseCard extends StatelessWidget {
               child: IconButton(
                 icon: const Icon(Icons.message, color: Colors.blue),
                 onPressed: () {
-                  // Implement the logic to contact or message the pharmacist
+                  if (data.pharmacistId != null) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => ChatScreen(receiverId: data.pharmacistId!, receiverName: data.pharmacistName,), // Using '!' to assert non-null
+                      ),
+                    );
+                  } else {
+                    // Handle the case when pharmacistId is null, e.g., show a dialog or a snackbar
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Pharmacist ID is not available')),
+                    );
+                  }
                 },
               ),
             ),

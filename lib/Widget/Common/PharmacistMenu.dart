@@ -88,6 +88,13 @@ class PharmacistMenu extends StatelessWidget {
             onTap: () => onMenuItemSelected('Settings'),
           ),
           ListTile(
+            leading: const Icon(Icons.help_center),
+            title: const Text('Support'),
+            onTap: () {
+              onMenuItemSelected('Support');
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.exit_to_app), // Logout
             title: const Text('Logout'),
             onTap: () => onMenuItemSelected('Logout'),
