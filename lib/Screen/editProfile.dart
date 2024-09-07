@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class EditProfilePage extends StatefulWidget {
   final String userId;
 
-  EditProfilePage({required this.userId});
+  const EditProfilePage({super.key, required this.userId});
 
   @override
   _EditProfilePageState createState() => _EditProfilePageState();
@@ -39,14 +39,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
     // Save the updated profile information
     // Typically involves making an API call
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Profile saved successfully')),
+      const SnackBar(content: Text('Profile saved successfully')),
     );
   }
 
   void _changePassword() {
     // Navigate to the change password screen
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Navigate to change password screen')),
+      const SnackBar(content: Text('Navigate to change password screen')),
     );
   }
 
@@ -55,9 +55,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Edit Profile'),
+        title: const Text('Edit Profile'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -69,7 +69,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             Center(
               child: Stack(
                 children: [
-                  CircleAvatar(
+                  const CircleAvatar(
                     radius: 50,
                     backgroundImage: NetworkImage(
                         'https://via.placeholder.com/150'), // Replace with user's image
@@ -78,7 +78,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     bottom: 0,
                     right: 0,
                     child: IconButton(
-                      icon: Icon(Icons.camera_alt, color: Colors.blue),
+                      icon: const Icon(Icons.camera_alt, color: Colors.blue),
                       onPressed: () {
                         // Implement image change functionality
                       },
@@ -87,18 +87,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 ],
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             // Full Name
             Text(
               _fullNameController.text,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Text(
               _usernameController.text,
-              style: TextStyle(color: Colors.grey, fontSize: 16),
+              style: const TextStyle(color: Colors.grey, fontSize: 16),
             ),
-            Divider(height: 30),
+            const Divider(height: 30),
             // Form Fields
             _buildTextField(_fullNameController, 'Full name', Icons.person),
             Row(
@@ -106,7 +106,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 Expanded(
                   child: _buildTextField(_genderController, 'Gender', Icons.person_outline),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Expanded(
                   child: _buildTextField(_birthdayController, 'Birthday', Icons.calendar_today),
                 ),
@@ -115,27 +115,27 @@ class _EditProfilePageState extends State<EditProfilePage> {
             _buildTextField(_phoneNumberController, 'Phone number', Icons.phone),
             _buildTextField(_emailController, 'Email', Icons.email),
             _buildTextField(_usernameController, 'Username', Icons.account_circle),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             // Save Button
             ElevatedButton(
               onPressed: _saveProfile,
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.blue, backgroundColor: Colors.white, // Text color
-                padding: EdgeInsets.symmetric(vertical: 16),
+                padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: Text('Save'),
+              child: const Text('Save'),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             // Change Password Button
             TextButton(
               onPressed: _changePassword,
-              child: Text('Change Password'),
               style: TextButton.styleFrom(
                 foregroundColor: Colors.blue, // Text color
               ),
+              child: const Text('Change Password'),
             ),
           ],
         ),
@@ -161,6 +161,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 }
 
-void main() => runApp(MaterialApp(
+void main() => runApp(const MaterialApp(
   home: EditProfilePage(userId: '123'), // Replace with the actual user ID
 ));

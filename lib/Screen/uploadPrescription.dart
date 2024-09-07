@@ -2,14 +2,12 @@
 
 
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:medi_connect/Sevices/API/UploadPriscriptionAPI.dart';
 import '../Sevices/API/PharmacistAPI.dart';
 import '../Sevices/Auth/UserSession.dart';
 import '../Utills/Data/StatesAndCities.dart';
-import '../Widget/Common/CommonAppBar.dart';
 
 class UploadPrescription extends StatefulWidget {
   const UploadPrescription({super.key});
@@ -73,7 +71,7 @@ class _UploadPrescriptionState extends State<UploadPrescription> {
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please select an image to upload.')),
+        const SnackBar(content: Text('Please select an image to upload.')),
       );
     }
   }
@@ -81,7 +79,7 @@ class _UploadPrescriptionState extends State<UploadPrescription> {
   Future<void> _checkAvailability() async {
     if (_prescriptionImage == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('No image uploaded to check availability.')),
+        const SnackBar(content: Text('No image uploaded to check availability.')),
       );
       return;
     }
@@ -98,7 +96,7 @@ class _UploadPrescriptionState extends State<UploadPrescription> {
 
       if (_pharmacists.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('No pharmacists found for the selected location.')),
+          const SnackBar(content: Text('No pharmacists found for the selected location.')),
         );
         return;
       }
@@ -132,8 +130,8 @@ class _UploadPrescriptionState extends State<UploadPrescription> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        final TextEditingController _medicationNameController = TextEditingController();
-        final TextEditingController _medicationQuantityController = TextEditingController();
+        final TextEditingController medicationNameController = TextEditingController();
+        final TextEditingController medicationQuantityController = TextEditingController();
 
         return AlertDialog(
           title: const Text("Inquire Medicine"),
@@ -141,14 +139,14 @@ class _UploadPrescriptionState extends State<UploadPrescription> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                controller: _medicationNameController,
+                controller: medicationNameController,
                 decoration: const InputDecoration(
                   labelText: "Medication Name",
                 ),
               ),
               const SizedBox(height: 16),
               TextField(
-                controller: _medicationQuantityController,
+                controller: medicationQuantityController,
                 decoration: const InputDecoration(
                   labelText: "Medication Quantity",
                 ),
@@ -165,8 +163,8 @@ class _UploadPrescriptionState extends State<UploadPrescription> {
             ),
             TextButton(
               onPressed: () {
-                final medicationName = _medicationNameController.text;
-                final medicationQuantity = _medicationQuantityController.text;
+                final medicationName = medicationNameController.text;
+                final medicationQuantity = medicationQuantityController.text;
 
                 // Handle the inquire logic here with medicationName and medicationQuantity
                 print("Inquire about: $medicationName, Quantity: $medicationQuantity");
@@ -299,8 +297,8 @@ class _UploadPrescriptionState extends State<UploadPrescription> {
               ElevatedButton(
                 onPressed: _uploadPrescription,
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(const Color(0xFF2E384D)),
-                  fixedSize: MaterialStateProperty.all(const Size(300, 50)),
+                  backgroundColor: WidgetStateProperty.all(const Color(0xFF2E384D)),
+                  fixedSize: WidgetStateProperty.all(const Size(300, 50)),
                 ),
                 child: const Text("Upload Prescription",
                   style: TextStyle(
@@ -312,8 +310,8 @@ class _UploadPrescriptionState extends State<UploadPrescription> {
               ElevatedButton(
                 onPressed: _showInquireMedicineModal,
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(const Color(0xFF2E384D)),
-                  fixedSize: MaterialStateProperty.all(const Size(300, 50)),
+                  backgroundColor: WidgetStateProperty.all(const Color(0xFF2E384D)),
+                  fixedSize: WidgetStateProperty.all(const Size(300, 50)),
                 ),
                 child: const Text("Inquire Medicine",
                   style: TextStyle(
@@ -322,13 +320,13 @@ class _UploadPrescriptionState extends State<UploadPrescription> {
                 ),
               ),
               const SizedBox(height: 20),
-              if (_isUploading) CircularProgressIndicator(), // Show loading indicator
+              if (_isUploading) const CircularProgressIndicator(), // Show loading indicator
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _checkAvailability, // Call the check availability method
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(const Color(0xFFE03044)),
-                  fixedSize: MaterialStateProperty.all(const Size(300, 50)),
+                  backgroundColor: WidgetStateProperty.all(const Color(0xFFE03044)),
+                  fixedSize: WidgetStateProperty.all(const Size(300, 50)),
                 ),
                 child: const Text("Check Availability",
                   style: TextStyle(

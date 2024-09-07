@@ -1,12 +1,10 @@
-import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:medi_connect/Screen/Login.dart';
-import 'package:medi_connect/Widget/Common/CommonAppBar.dart';
+import 'package:medi_connect/Widget/WidgetHelpers.dart';
 import '../Model/PatientSignupDto.dart';
 import '../Model/SignupDto.dart';
-import '../Sevices/API/PatientSignupAPI.dart'; // For JSON encoding/decoding
+import '../Sevices/API/PatientSignupAPI.dart';
+import '../Widget/Common/CommonAppBar.dart';
+import 'Login.dart';
 
 class PatientSignup extends StatefulWidget {
   const PatientSignup({super.key});
@@ -31,6 +29,8 @@ class _PatientSignupState extends State<PatientSignup> {
   final _stateController = TextEditingController();
   final _postalCodeController = TextEditingController();
 
+  bool _obscureText = true;
+
   @override
   void dispose() {
     // Clean up controllers when the widget is disposed
@@ -45,6 +45,12 @@ class _PatientSignupState extends State<PatientSignup> {
     _stateController.dispose();
     _postalCodeController.dispose();
     super.dispose();
+  }
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
   }
 
   Future<void> _signup() async {
@@ -65,16 +71,13 @@ class _PatientSignupState extends State<PatientSignup> {
       final signupDto = SignupDto(signupRequestPatient: patientSignupDto.toJson());
       try {
         final response = await _signupAPI.signupPatient(signupDto);
-        print(jsonEncode(signupDto.toJson()));
-        print(response.statusCode);
-        if (response.statusCode == 200) { // HTTP 201 indicates successful creation
+        if (response.statusCode == 200) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Sign-up successful')),
           );
           Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) =>const LoginScreen())
+            MaterialPageRoute(builder: (context) => const LoginScreen()),
           );
-          // Navigate to another screen or handle success logic
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Sign-up failed: ${response.body}')),
@@ -91,14 +94,13 @@ class _PatientSignupState extends State<PatientSignup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:const CommonAppBar(),
-        backgroundColor: Colors.grey.shade100,
+      backgroundColor: Colors.white,
+      appBar: const CommonAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
           child: Form(
-            key: _formKey, // Attach the form key for validation
+            key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -112,12 +114,11 @@ class _PatientSignupState extends State<PatientSignup> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                // Form fields with validation
-                TextFormField(
+                // Username Field
+                WidgetHelpers.buildTextField(
                   controller: _usernameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Username',
-                  ),
+                  label: 'Username',
+                  icon: Icons.person,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your username';
@@ -125,54 +126,62 @@ class _PatientSignupState extends State<PatientSignup> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _lastNameController,
-                  decoration: const InputDecoration(
-                   // labelText: 'Last Name',
-                    hintText: 'Last Name',
-                    hintFadeDuration: Durations.short1,
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your last name';
-                    }
-                    return null;
-                  },
+                const SizedBox(height: 8),
+
+                // First Name and Last Name in the same row
+                Row(
+                  children: [
+                    Expanded(
+                      child: WidgetHelpers.buildTextField(
+                        controller: _firstNameController,
+                        label: 'First Name',
+                        icon: Icons.person_outline,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your first name';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: WidgetHelpers.buildTextField(
+                        controller: _lastNameController,
+                        label: 'Last Name',
+                        icon: Icons.person_outline,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your last name';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _firstNameController,
-                  decoration: const InputDecoration(
-                    labelText: 'First Name',
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your first name';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
+                const SizedBox(height: 8),
+
+                // Email Field
+                WidgetHelpers.buildTextField(
                   controller: _emailController,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                  ),
+                  label: 'Email',
+                  icon: Icons.email,
                   validator: (value) {
                     if (value == null || value.isEmpty || !value.contains('@')) {
-                    return 'Please enter a valid email address';
+                      return 'Please enter a valid email address';
                     }
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
-                TextFormField(
+                const SizedBox(height: 8),
+
+                // Password Field
+                WidgetHelpers.buildPasswordTextField(
                   controller: _passwordController,
-                  obscureText: true, // Hide password input
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                  ),
+                  label: 'Password',
+                  obscureText: _obscureText,
+                  toggleVisibility: _togglePasswordVisibility,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your password';
@@ -180,12 +189,13 @@ class _PatientSignupState extends State<PatientSignup> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
-                TextFormField(
+                const SizedBox(height: 8),
+
+                // Phone Number Field
+                WidgetHelpers.buildTextField(
                   controller: _phoneNumberController,
-                  decoration: const InputDecoration(
-                    labelText: 'Phone Number',
-                  ),
+                  label: 'Phone Number',
+                  icon: Icons.phone,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your phone number';
@@ -193,12 +203,13 @@ class _PatientSignupState extends State<PatientSignup> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
-                TextFormField(
+                const SizedBox(height: 8),
+
+                // Address Line 1 Field
+                WidgetHelpers.buildTextField(
                   controller: _addressController,
-                  decoration: const InputDecoration(
-                    labelText: 'Address Line 1',
-                  ),
+                  label: 'Address Line 1',
+                  icon: Icons.home,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your address';
@@ -206,38 +217,47 @@ class _PatientSignupState extends State<PatientSignup> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _cityController,
-                  decoration: const InputDecoration(
-                    labelText: 'City',
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your city';
-                    }
-                    return null;
-                  },
+                const SizedBox(height: 8),
+
+                // City and State in the same row
+                Row(
+                  children: [
+                    Expanded(
+                      child: WidgetHelpers.buildTextField(
+                        controller: _cityController,
+                        label: 'City',
+                        icon: Icons.location_city,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your city';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: WidgetHelpers.buildTextField(
+                        controller: _stateController,
+                        label: 'State',
+                        icon: Icons.map,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your state';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _stateController,
-                  decoration: const InputDecoration(
-                    labelText: 'State',
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your state';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
+                const SizedBox(height: 8),
+
+                // Postal Code Field
+                WidgetHelpers.buildTextField(
                   controller: _postalCodeController,
-                  decoration: const InputDecoration(
-                    labelText: 'Postal Code',
-                  ),
+                  label: 'Postal Code',
+                  icon: Icons.mail_outline,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your postal code';
@@ -246,18 +266,16 @@ class _PatientSignupState extends State<PatientSignup> {
                   },
                 ),
                 const SizedBox(height: 16),
-                // Sign-up button
-                ElevatedButton(
-                  style: ButtonStyle(
-                      backgroundColor:MaterialStateProperty.all(const Color(0xFF2E384D)),
-                    fixedSize: MaterialStateProperty.all(const Size(300.00,20.00)),
-                  ),
-                  onPressed: _signup, // Sign-up logic defined earlier
-                  child: const Text("Sign Up",
-                      style:TextStyle(
-                        color:Colors.white,
-                      ),
-                  ),
+
+                // Sign-up button using buildCommonButton
+                WidgetHelpers.buildCommonButton(
+                  text: 'Sign Up',
+                  onPressed: _signup,
+                  backgroundColor: Colors.blue,
+                  textColor: Colors.white,
+                  borderRadius: 10.0,
+                  paddingVertical: 16.0,
+                  paddingHorizontal: 32.0,
                 ),
               ],
             ),

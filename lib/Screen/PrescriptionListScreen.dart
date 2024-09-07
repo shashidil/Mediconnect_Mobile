@@ -6,7 +6,7 @@ import 'Request.dart';
 class PrescriptionListScreen extends StatefulWidget {
   final List<PrescriptionDTO> prescriptions;
 
-  PrescriptionListScreen({required this.prescriptions});
+  const PrescriptionListScreen({super.key, required this.prescriptions});
 
   @override
   _PrescriptionListScreenState createState() => _PrescriptionListScreenState();

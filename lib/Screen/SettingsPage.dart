@@ -7,7 +7,7 @@ import '../Widget/WidgetHelpers.dart';
 class SettingsPage extends StatefulWidget {
   final String userId;
 
-  SettingsPage({required this.userId});
+  const SettingsPage({super.key, required this.userId});
 
   @override
   _SettingsPageState createState() => _SettingsPageState();
@@ -72,9 +72,9 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Profile'),
+        title: const Text('Edit Profile'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -82,7 +82,7 @@ class _SettingsPageState extends State<SettingsPage> {
         future: userDetails,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData) {
@@ -96,7 +96,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     Center(
                       child: Stack(
                         children: [
-                          CircleAvatar(
+                          const CircleAvatar(
                             radius: 50,
                             backgroundImage: NetworkImage(
                                 'https://via.placeholder.com/150'), // Replace with user's image
@@ -105,7 +105,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             bottom: 0,
                             right: 0,
                             child: IconButton(
-                              icon: Icon(Icons.camera_alt, color: Colors.blue),
+                              icon: const Icon(Icons.camera_alt, color: Colors.blue),
                               onPressed: () {
                                 // Implement image change functionality
                               },
@@ -114,12 +114,12 @@ class _SettingsPageState extends State<SettingsPage> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Text(
                       _usernameController.text,
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     ),
-                    Divider(height: 30),
+                    const Divider(height: 30),
 
                     WidgetHelpers.buildTextField(
                       controller: _usernameController,
@@ -178,7 +178,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ],
 
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
                     WidgetHelpers.buildCommonButton(
                       text: 'Save',
@@ -189,7 +189,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       paddingVertical: 16.0,
                     ),
 
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
                     WidgetHelpers.buildCommonButton(
                       text: 'Change Password',
@@ -205,7 +205,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             );
           } else {
-            return Center(child: Text('No user data found'));
+            return const Center(child: Text('No user data found'));
           }
         },
       ),

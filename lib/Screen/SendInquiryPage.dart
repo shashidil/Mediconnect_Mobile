@@ -5,6 +5,8 @@ import '../Widget/WidgetHelpers.dart';
 import 'package:medi_connect/Sevices/Auth/UserSession.dart';
 
 class SendInquiryPage extends StatefulWidget {
+  const SendInquiryPage({super.key});
+
   @override
   _SendInquiryPageState createState() => _SendInquiryPageState();
 }
@@ -40,7 +42,7 @@ class _SendInquiryPageState extends State<SendInquiryPage> {
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('User ID not found. Please log in.')),
+          const SnackBar(content: Text('User ID not found. Please log in.')),
         );
       }
     }
@@ -51,7 +53,7 @@ class _SendInquiryPageState extends State<SendInquiryPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Send Inquiry'),
+        title: const Text('Send Inquiry'),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -61,14 +63,14 @@ class _SendInquiryPageState extends State<SendInquiryPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Optional icon or image at the top
-              Icon(
+              const Icon(
                 Icons.help_outline,
                 color: Colors.blue,
                 size: 60.0,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               // Introductory text
-              Text(
+              const Text(
                 'Have a question or issue?',
                 style: TextStyle(
                   fontSize: 24,
@@ -76,7 +78,7 @@ class _SendInquiryPageState extends State<SendInquiryPage> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 'Fill out the form below and we will get back to you as soon as possible.',
                 style: TextStyle(
@@ -85,7 +87,7 @@ class _SendInquiryPageState extends State<SendInquiryPage> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Form(
                 key: _formKey,
                 child: Column(
@@ -101,7 +103,7 @@ class _SendInquiryPageState extends State<SendInquiryPage> {
                       icon: Icons.message,
                       maxLines: 5, // Allowing for a multi-line message
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     WidgetHelpers.buildCommonButton(
                       text: 'Submit Inquiry',
                       onPressed: _submitInquiry,

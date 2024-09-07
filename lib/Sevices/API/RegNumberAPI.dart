@@ -1,6 +1,5 @@
 import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'dart:io'; // For HTTP status codes
+// For HTTP status codes
 
 class RegNumberAPI {
   final String baseUrl = 'http://localhost:8080/api/checkRegNumber';

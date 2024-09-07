@@ -11,7 +11,7 @@ class ChatScreen extends StatefulWidget {
   final int? receiverId;
   final String? receiverName;
 
-  ChatScreen({required this.receiverId, required this.receiverName});
+  const ChatScreen({super.key, required this.receiverId, required this.receiverName});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -80,7 +80,7 @@ class _ChatScreenState extends State<ChatScreen> {
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('No recipient selected for this message.')),
+        const SnackBar(content: Text('No recipient selected for this message.')),
       );
     }
   }
@@ -98,8 +98,8 @@ class _ChatScreenState extends State<ChatScreen> {
       body: Column(
         children: <Widget>[
           Container(
-            padding: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-            decoration: BoxDecoration(
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+            decoration: const BoxDecoration(
               color: Colors.blue,
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20),
@@ -109,28 +109,28 @@ class _ChatScreenState extends State<ChatScreen> {
             child: Row(
               children: <Widget>[
                 IconButton(
-                  icon: Icon(Icons.arrow_back, color: Colors.white),
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
                   onPressed: () => Navigator.pop(context),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 CircleAvatar(
                   backgroundColor: Colors.grey[300],
                   child: Text(
                     widget.receiverName![0],
-                    style: TextStyle(color: Colors.white, fontSize: 20),
+                    style: const TextStyle(color: Colors.white, fontSize: 20),
                   ),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Text(
                   'Chat with ${widget.receiverName}',
-                  style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
           ),
           Expanded(
             child: ListView.builder(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               itemCount: _messages.length,
               itemBuilder: (context, index) {
                 final message = _messages[index];
@@ -138,8 +138,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 return Align(
                   alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
                   child: Container(
-                    margin: EdgeInsets.symmetric(vertical: 5),
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                    margin: const EdgeInsets.symmetric(vertical: 5),
+                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                     decoration: BoxDecoration(
                       color: isMe ? Colors.blue[100] : Colors.grey[200],
                       borderRadius: BorderRadius.circular(10),
@@ -149,9 +149,9 @@ class _ChatScreenState extends State<ChatScreen> {
                       children: <Widget>[
                         Text(
                           message.content,
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                         Text(
                           message.timestamp,
                           style: TextStyle(color: Colors.grey[600], fontSize: 12),
@@ -164,7 +164,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: [BoxShadow(color: Colors.grey[200]!, blurRadius: 10)],
@@ -174,21 +174,21 @@ class _ChatScreenState extends State<ChatScreen> {
                 Expanded(
                   child: TextField(
                     controller: _controller,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Type your message...',
                       border: InputBorder.none,
                     ),
                   ),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 ElevatedButton(
                   onPressed: _sendMessage,
                   style: ElevatedButton.styleFrom(
-                    shape: CircleBorder(),
-                    padding: EdgeInsets.all(14),
+                    shape: const CircleBorder(),
+                    padding: const EdgeInsets.all(14),
                     backgroundColor: Colors.blue,
                   ),
-                  child: Icon(Icons.send, color: Colors.white),
+                  child: const Icon(Icons.send, color: Colors.white),
                 ),
               ],
             ),

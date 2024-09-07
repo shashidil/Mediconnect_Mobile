@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:medi_connect/Screen/ChatListScreen.dart';
-import 'package:medi_connect/Screen/ChatScreen.dart';
 import 'package:medi_connect/Screen/Login.dart';
 import 'package:medi_connect/Screen/OrderHistoryScreen.dart';
 import 'package:medi_connect/Screen/SettingsPage.dart';
-import 'package:medi_connect/Screen/editProfile.dart';
 import 'package:medi_connect/Screen/uploadPrescription.dart';
 import 'package:medi_connect/Sevices/Auth/AuthHeader.dart';
 import '../Sevices/Auth/UserSession.dart';
@@ -39,7 +37,7 @@ class PatientDashboard extends StatelessWidget {
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: User ID not found.')),
+        const SnackBar(content: Text('Error: User ID not found.')),
       );
     }
   }
@@ -83,7 +81,7 @@ class PatientDashboard extends StatelessWidget {
             // Navigate to the OrderHistoryScreen for patients
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => ChatListScreen(),
+                builder: (context) => const ChatListScreen(),
               ),
             );
           }
@@ -93,7 +91,7 @@ class PatientDashboard extends StatelessWidget {
           if (menuItem == 'Support') {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) =>  SendInquiryPage(),
+                builder: (context) =>  const SendInquiryPage(),
               ),
             );
           }
@@ -102,7 +100,7 @@ class PatientDashboard extends StatelessWidget {
           }
         },
       ),
-      body: PatientOverviewPage()
+      body: const PatientOverviewPage()
     );
   }
 }

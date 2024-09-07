@@ -6,6 +6,7 @@ class WidgetHelpers {
     required String label,
     required IconData icon,
     int maxLines = 1,
+    FormFieldValidator<String>? validator,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -19,6 +20,35 @@ class WidgetHelpers {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
+        validator: validator, // Added validator
+      ),
+    );
+  }
+
+  static Widget buildPasswordTextField({
+    required TextEditingController controller,
+    required String label,
+    bool obscureText = true,
+    required VoidCallback toggleVisibility,
+    FormFieldValidator<String>? validator,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextFormField(
+        controller: controller,
+        obscureText: obscureText,
+        decoration: InputDecoration(
+          labelText: label,
+          prefixIcon: const Icon(Icons.lock),
+          suffixIcon: IconButton(
+            icon: Icon(obscureText ? Icons.visibility : Icons.visibility_off),
+            onPressed: toggleVisibility,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        validator: validator, // Added validator
       ),
     );
   }
@@ -47,4 +77,32 @@ class WidgetHelpers {
       child: Text(text),
     );
   }
+
+  Widget buildCustomTextField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    required FormFieldSetter<String> onSaved,
+    required FormFieldValidator<String> validator,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          prefixIcon: Icon(icon),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        keyboardType: keyboardType,
+        onSaved: onSaved,
+        validator: validator,
+      ),
+    );
+  }
+
+
 }

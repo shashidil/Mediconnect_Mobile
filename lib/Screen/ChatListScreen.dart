@@ -6,6 +6,8 @@ import '../Sevices/ChatService.dart';
 import 'ChatScreen.dart';
 
 class ChatListScreen extends StatefulWidget {
+  const ChatListScreen({super.key});
+
   @override
   _ChatListScreenState createState() => _ChatListScreenState();
 }
@@ -69,10 +71,10 @@ class _ChatListScreenState extends State<ChatListScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Chats'),
+        title: const Text('Chats'),
       ),
       body: _loading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
         itemCount: _chats.length,
         itemBuilder: (context, index) {
@@ -85,21 +87,21 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 borderRadius: BorderRadius.circular(15),
               ),
               child: ListTile(
-                contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 leading: CircleAvatar(
                   backgroundColor: Colors.blue,
                   child: Text(
                     chat.name[0], // Display the first letter of the name
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                   ),
                 ),
                 title: Text(
                   chat.name,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey),
+                trailing: const Icon(Icons.arrow_forward_ios, color: Colors.grey),
                 onTap: () => _openChat(chat),
               ),
             ),

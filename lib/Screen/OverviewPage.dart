@@ -5,6 +5,8 @@ import '../Model/OrderQuantityByMonthDTO.dart';
 import '../Sevices/API/ReportAPI.dart';
 
 class OverviewPage extends StatefulWidget {
+  const OverviewPage({super.key});
+
   @override
   _OverviewPageState createState() => _OverviewPageState();
 }
@@ -25,7 +27,7 @@ class _OverviewPageState extends State<OverviewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Overview'),
+        title: const Text('Overview'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -36,7 +38,7 @@ class _OverviewPageState extends State<OverviewPage> {
                 future: top5Medicines,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (snapshot.hasData) {
@@ -49,7 +51,7 @@ class _OverviewPageState extends State<OverviewPage> {
                               title: '${medicine.medicationName}\n${medicine.totalQuantity}',
                               value: medicine.totalQuantity.toDouble(),
                               color: Colors.blue, // Customize the color
-                              titleStyle: TextStyle(
+                              titleStyle: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white, // Color of the title text
@@ -61,7 +63,7 @@ class _OverviewPageState extends State<OverviewPage> {
                       )
                     );
                   } else {
-                    return Center(child: Text('No data available'));
+                    return const Center(child: Text('No data available'));
                   }
                 },
               ),
@@ -72,7 +74,7 @@ class _OverviewPageState extends State<OverviewPage> {
                 future: orderQuantities,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (snapshot.hasData) {
@@ -155,7 +157,7 @@ class _OverviewPageState extends State<OverviewPage> {
 
                     );
                   } else {
-                    return Center(child: Text('No data available'));
+                    return const Center(child: Text('No data available'));
                   }
                 },
               ),

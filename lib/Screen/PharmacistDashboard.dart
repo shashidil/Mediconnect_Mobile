@@ -54,7 +54,7 @@ class PharmacistDashboard extends StatelessWidget {
     } catch (e) {
       // Handle errors here, maybe show a Snackbar or some other UI indication
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to load prescriptions. Please try again later.')),
+        const SnackBar(content: Text('Failed to load prescriptions. Please try again later.')),
       );
     }
   }
@@ -70,7 +70,7 @@ class PharmacistDashboard extends StatelessWidget {
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: User ID not found.')),
+        const SnackBar(content: Text('Error: User ID not found.')),
       );
     }
   }
@@ -93,7 +93,7 @@ class PharmacistDashboard extends StatelessWidget {
             // Navigate to the OrderHistoryScreen for patients
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => ChatListScreen(),
+                builder: (context) => const ChatListScreen(),
               ),
             );
           }
@@ -108,7 +108,7 @@ class PharmacistDashboard extends StatelessWidget {
           if (menuItem == 'Overview') {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) =>  OverviewPage(),
+                builder: (context) =>  const OverviewPage(),
               ),
             );
           }
@@ -118,7 +118,7 @@ class PharmacistDashboard extends StatelessWidget {
           if (menuItem == 'Support') {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) =>  SendInquiryPage(),
+                builder: (context) =>  const SendInquiryPage(),
               ),
             );
           }
@@ -126,7 +126,7 @@ class PharmacistDashboard extends StatelessWidget {
         },
 
       ),
-      body: OverviewPage(),
+      body: const OverviewPage(),
     );
   }
 }

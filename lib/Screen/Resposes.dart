@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:medi_connect/Sevices/API/InvoiceAPI.dart';
 import '../Model/ResponseData.dart';
+import '../Sevices/API/InvoiceAPI.dart';
 import '../Sevices/Auth/UserSession.dart';
 import 'ResponseCard.dart';
 
 class ResponseScreen extends StatefulWidget {
-  const ResponseScreen({Key? key}) : super(key: key);
+  const ResponseScreen({super.key});
 
   @override
   _ResponseScreenState createState() => _ResponseScreenState();
@@ -13,6 +13,10 @@ class ResponseScreen extends StatefulWidget {
 
 class _ResponseScreenState extends State<ResponseScreen> {
   late Future<List<ResponseData>> _futureResponses;
+  List<ResponseData> _responseData = [];
+
+  // Filter criteria
+  String _selectedFilter = 'None'; // Options: 'None', 'Price', 'Distance'
 
   @override
   void initState() {
@@ -26,32 +30,69 @@ class _ResponseScreenState extends State<ResponseScreen> {
       throw Exception("User ID not found.");
     }
     try {
-      return await InvoiceAPI.fetchResponses(int.parse(userId));
+      final responses = await InvoiceAPI.fetchResponses(int.parse(userId));
+      return responses;
     } catch (e) {
       print('Error fetching responses: $e'); // Log the error
       rethrow;
     }
   }
 
+  void _applyFilter(List<ResponseData> responses) {
+    if (_selectedFilter == 'Price') {
+      responses.sort((a, b) => a.total!.compareTo(b.total!));
+    } else if (_selectedFilter == 'Distance') {
+      responses.sort((a, b) => a.distance.compareTo(b.distance));
+    }
+  }
+
+  void _removeResponseByPrescriptionId(int prescriptionId) {
+    setState(() {
+      _responseData.removeWhere((response) => response.prescriptionId == prescriptionId);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Responses')),
+      appBar: AppBar(
+        title: const Text('Responses'),
+        actions: [
+          DropdownButton<String>(
+            value: _selectedFilter,
+            items: const [
+              DropdownMenuItem(value: 'None', child: Text('None')),
+              DropdownMenuItem(value: 'Price', child: Text('Sort by Price')),
+              DropdownMenuItem(value: 'Distance', child: Text('Sort by Distance')),
+            ],
+            onChanged: (value) {
+              setState(() {
+                _selectedFilter = value!;
+              });
+            },
+          ),
+        ],
+      ),
       body: FutureBuilder<List<ResponseData>>(
         future: _futureResponses,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            print('Snapshot error: ${snapshot.error}'); // Log the snapshot error
+            print('Snapshot error: ${snapshot.error}');
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(child: Text('No responses found.'));
           } else {
+            _responseData = snapshot.data!;
+            _applyFilter(_responseData);
             return ListView.builder(
-              itemCount: snapshot.data!.length,
+              itemCount: _responseData.length,
               itemBuilder: (context, index) {
-                return ResponseCard(data: snapshot.data![index]);
+                return ResponseCard(
+                  data: _responseData[index],
+                  onOrderSuccess: () => _removeResponseByPrescriptionId(_responseData[index].prescriptionId),
+                );
               },
             );
           }

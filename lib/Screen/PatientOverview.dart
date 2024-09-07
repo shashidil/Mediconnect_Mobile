@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class PatientOverviewPage extends StatelessWidget {
+  const PatientOverviewPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,7 +17,7 @@ class PatientOverviewPage extends StatelessWidget {
                 // Background Image or Video
                 Container(
                   height: 250,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage('assets/images/hero_image.jpg'), // Replace with your image or video
                       fit: BoxFit.cover,
@@ -23,7 +25,7 @@ class PatientOverviewPage extends StatelessWidget {
                   ),
                 ),
                 // Text Overlay
-                Positioned.fill(
+                const Positioned.fill(
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -64,21 +66,21 @@ class PatientOverviewPage extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             // How It Works Section
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     "How It Works",
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   _buildHowItWorksStep(
                     stepNumber: "1",
                     title: "Upload Your Prescription",
@@ -110,7 +112,7 @@ class PatientOverviewPage extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
 
             // Call to Action
             Padding(
@@ -120,17 +122,17 @@ class PatientOverviewPage extends StatelessWidget {
                   onPressed: () {
                     // Navigate to the relevant page
                   },
-                  child: Text("Get Started"),
                   style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
+                  child: const Text("Get Started"),
                 ),
               ),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
 
             // Support Section
             Padding(
@@ -138,17 +140,17 @@ class PatientOverviewPage extends StatelessWidget {
               child: Center(
                 child: Column(
                   children: [
-                    Text(
+                    const Text(
                       "Need Help?",
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     ElevatedButton.icon(
                       onPressed: () {
                         // Navigate to support page or dial support number
                       },
-                      icon: Icon(Icons.phone),
-                      label: Text("Contact Support"),
+                      icon: const Icon(Icons.phone),
+                      label: const Text("Contact Support"),
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white, backgroundColor: Colors.blue,
                       ),
@@ -157,7 +159,7 @@ class PatientOverviewPage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
           ],
         ),
       ),
@@ -173,15 +175,15 @@ class PatientOverviewPage extends StatelessWidget {
   }) {
     return ListTile(
       leading: CircleAvatar(
+        backgroundColor: Colors.blue,
         child: Text(
           stepNumber,
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.blue,
       ),
       title: Text(
         title,
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
       ),
       subtitle: Text(description),
       trailing: Icon(icon, size: 30, color: Colors.blue),

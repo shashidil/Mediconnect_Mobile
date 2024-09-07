@@ -1,7 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AuthHeader {
-  static final _storage = FlutterSecureStorage();
+  static const _storage = FlutterSecureStorage();
 
   static const _accessTokenKey = 'accessToken';
 

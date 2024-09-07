@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import '../Model/OrderDto.dart';
 import '../Sevices/API/OrderAPI.dart';
 import '../Sevices/Auth/UserSession.dart';
+import '../Widget/WidgetHelpers.dart';
 import 'OrderDetails.dart';
 
 class OrderHistoryScreen extends StatefulWidget {
   final bool isPharmacist;
 
-  const OrderHistoryScreen({Key? key, required this.isPharmacist}) : super(key: key);
+  const OrderHistoryScreen({super.key, required this.isPharmacist});
 
   @override
   _OrderHistoryScreenState createState() => _OrderHistoryScreenState();
@@ -34,7 +35,6 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
       ),
     );
 
-    // Check if the order was updated and refresh the list
     if (result == true) {
       setState(() {
         _orderHistoryFuture = _fetchOrderHistory();
@@ -46,26 +46,36 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       elevation: 3,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  order.orderDate,
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  '\$${order.totalAmount.toStringAsFixed(2)}',
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                ),
-              ],
+            Text(
+              order.orderNumber,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+              ),
             ),
-            const SizedBox(height: 10),
-            Text(order.orderNumber, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 4),
+            Text(
+              order.orderDate,
+              style: const TextStyle(fontSize: 14, color: Colors.grey),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '\$${order.totalAmount.toStringAsFixed(2)}',
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.green,
+              ),
+            ),
             const SizedBox(height: 8),
             Text(
               'Status: ${order.orderStatus}',
@@ -76,36 +86,39 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
             ),
             const SizedBox(height: 10),
             if (widget.isPharmacist)
-              ElevatedButton(
+              WidgetHelpers.buildCommonButton(
+                text: 'Edit Order',
                 onPressed: () => _navigateToOrderDetails(order),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                ),
-                child: const Text('Edit Order'),
+                backgroundColor: Colors.blue,
+                textColor: Colors.white,
+                borderRadius: 8.0,
+                paddingVertical: 12.0,
+                paddingHorizontal: 16.0,
               )
             else
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  ElevatedButton(
+                  WidgetHelpers.buildCommonButton(
+                    text: 'View Details',
                     onPressed: () => _navigateToOrderDetails(order),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    ),
-                    child: const Text('View Details'),
+                    backgroundColor: Colors.blue,
+                    textColor: Colors.white,
+                    borderRadius: 8.0,
+                    paddingVertical: 12.0,
+                    paddingHorizontal: 16.0,
                   ),
                   if (order.orderStatus == 'Shipped')
-                    ElevatedButton(
+                    WidgetHelpers.buildCommonButton(
+                      text: 'Track',
                       onPressed: () {
                         // Implement tracking logic here
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                      ),
-                      child: const Text('Track'),
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      borderRadius: 8.0,
+                      paddingVertical: 12.0,
+                      paddingHorizontal: 16.0,
                     ),
                 ],
               ),

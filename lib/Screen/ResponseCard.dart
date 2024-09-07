@@ -1,15 +1,13 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../Model/ResponseData.dart';
-import 'ChatScreen.dart';
-import 'PaymentScreen.dart';
+import '../Widget/WidgetHelpers.dart';
 
 class ResponseCard extends StatelessWidget {
   final ResponseData data;
+  final VoidCallback onOrderSuccess;
 
-  const ResponseCard({super.key, required this.data});
+  const ResponseCard({super.key, required this.data, required this.onOrderSuccess});
 
   void _openGoogleMaps() async {
     final Uri url = Uri.parse(
@@ -22,13 +20,9 @@ class ResponseCard extends StatelessWidget {
     }
   }
 
-
   void _orderMedications(BuildContext context) {
-    // Navigator.of(context).push(
-    //   MaterialPageRoute(
-    //     builder: (context) => PaymentScreen(data: data), // Pass the ResponseData to PaymentScreen
-    //   ),
-    // );
+    // Logic to order medications, upon success:
+    onOrderSuccess();  // Call the success callback to remove the card
   }
 
   void _showDetailsModal(BuildContext context) {
@@ -45,20 +39,22 @@ class ResponseCard extends StatelessWidget {
               children: [
                 Text(
                   'Pharmacist: ${data.pharmacistName ?? 'Unknown'}',
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Colors.blueGrey,),
                 ),
                 const SizedBox(height: 8),
                 Text('Total Price: \$${data.total?.toStringAsFixed(2) ?? 'N/A'}'),
                 const SizedBox(height: 8),
                 Text('Distance: ${data.distance} km'),
                 const SizedBox(height: 8),
-                const Text('Medications:', style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text('Medications:', style: TextStyle(fontWeight: FontWeight.bold,color: Colors.blueGrey)),
                 ...data.medications.map((med) => Text(
-                    '${med.medicationName} - ${med.medicationDosage} - ${med.medicationQuantity} units - \$${med.amount}')).toList(),
+                    '${med.medicationName} - ${med.medicationDosage} - ${med.medicationQuantity} units - \$${med.amount}')),
                 const SizedBox(height: 16),
-                ElevatedButton(
+                IconButton(
+                  icon: const Icon(Icons.directions),
+                  tooltip: 'Get Directions',
                   onPressed: _openGoogleMaps,
-                  child: const Text('Get Directions'),
+                  color: Colors.blue,
                 ),
               ],
             ),
@@ -72,60 +68,44 @@ class ResponseCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.all(8),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      elevation: 4.0,
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: Stack(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Text(
+              'Pharmacist: ${data.pharmacistName ?? 'Unknown'}',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            const SizedBox(height: 8),
+            Text('Total: \$${data.total?.toStringAsFixed(2) ?? 'N/A'}'),
+            Text('Distance: ${data.distance} km'),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Pharmacist: ${data.pharmacistName ?? 'Unknown'}',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                IconButton(
+                  icon: const Icon(Icons.info_outline),
+                  tooltip: 'See More',
+                  onPressed: () => _showDetailsModal(context),
                 ),
-                const SizedBox(height: 8),
-                Text('Total: \$${data.total?.toStringAsFixed(2) ?? 'N/A'}'),
-                Text('Distance: ${data.distance} km'),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                      onPressed: () => _showDetailsModal(context),
-                      child: const Text('See More'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () => _orderMedications(context),
-                      child: const Text('Order'),
-                    ),
-                    ElevatedButton(
-                      onPressed: _openGoogleMaps,
-                      child: const Text('Get Directions'),
-                    ),
-                  ],
+                IconButton(
+                  icon: const Icon(Icons.directions),
+                  tooltip: 'Get Directions',
+                  onPressed: _openGoogleMaps,
+                ),
+                WidgetHelpers.buildCommonButton(
+                  text: 'Order',
+                  onPressed: () => _orderMedications(context),
+                  backgroundColor: Colors.blue,
+                  textColor: Colors.white,
+                  borderRadius: 8.0,
                 ),
               ],
-            ),
-            Positioned(
-              top: 0,
-              right: 0,
-              child: IconButton(
-                icon: const Icon(Icons.message, color: Colors.blue),
-                onPressed: () {
-                  if (data.pharmacistId != null) {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => ChatScreen(receiverId: data.pharmacistId!, receiverName: data.pharmacistName,), // Using '!' to assert non-null
-                      ),
-                    );
-                  } else {
-                    // Handle the case when pharmacistId is null, e.g., show a dialog or a snackbar
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Pharmacist ID is not available')),
-                    );
-                  }
-                },
-              ),
             ),
           ],
         ),

@@ -1,15 +1,11 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
-import 'package:medi_connect/Widget/Common/CommonAppBar.dart';
-
 import '../Model/PharmacistSignupDto.dart';
 import '../Model/SignupDto.dart';
 import '../Sevices/API/PharmacistSignupAPI.dart';
 import '../Sevices/API/RegNumberAPI.dart';
+import '../Widget/Common/CommonAppBar.dart';
+import '../Widget/WidgetHelpers.dart';
 import 'Login.dart';
 
 class PharmacistSignup extends StatefulWidget {
@@ -20,16 +16,13 @@ class PharmacistSignup extends StatefulWidget {
 }
 
 class _PharmacistSignupState extends State<PharmacistSignup> {
-  final _formKey = GlobalKey<FormState>(); // Key to validate the form
-  final PharmacistSignupAPI _signupAPI = PharmacistSignupAPI(); // Instance of SignupAPI
+  final _formKey = GlobalKey<FormState>();
+  final PharmacistSignupAPI _signupAPI = PharmacistSignupAPI();
   final RegNumberAPI _regNumberAPI = RegNumberAPI();
 
-
-  // Controllers for capturing form input
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
   final _pharmacyNameController = TextEditingController();
   final _regNumberController = TextEditingController();
   final _addressController = TextEditingController();
@@ -40,14 +33,13 @@ class _PharmacistSignupState extends State<PharmacistSignup> {
   bool isRegNumberValid = false;
   bool isCheckingRegNumber = false;
   Timer? _debounce;
+
   @override
   void dispose() {
-    // Clean up controllers when the widget is disposed
     _debounce?.cancel();
     _usernameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
-    _confirmPasswordController.dispose();
     _pharmacyNameController.dispose();
     _regNumberController.dispose();
     _addressController.dispose();
@@ -59,8 +51,6 @@ class _PharmacistSignupState extends State<PharmacistSignup> {
 
   Future<void> _checkRegNumber() async {
     final regNumber = _regNumberController.text;
-
-
     if (regNumber.isNotEmpty) {
       setState(() {
         isCheckingRegNumber = true;
@@ -68,14 +58,12 @@ class _PharmacistSignupState extends State<PharmacistSignup> {
 
       try {
         isRegNumberValid = await _regNumberAPI.checkRegNumber(regNumber);
-
       } catch (e) {
-        isRegNumberValid = false; //
-
+        isRegNumberValid = false;
       }
 
       setState(() {
-        isCheckingRegNumber = false; // Stop checking
+        isCheckingRegNumber = false;
       });
     }
   }
@@ -101,35 +89,23 @@ class _PharmacistSignupState extends State<PharmacistSignup> {
         postalCode: _postalCodeController.text,
       );
 
-
       final signupDto = SignupDto(signupRequestPharmacist: pharmacistSignupDto.toJson());
 
-
       try {
+        final response = await _signupAPI.signup(signupDto);
 
-     // await _checkRegNumber();
-      // if (isRegNumberValid) {
-          final response = await _signupAPI.signup(signupDto);
-
-          if (response.statusCode == 200) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Sign-up successful')),
-            );
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const LoginScreen())
-            );
-            // Navigate to another screen or handle success logic
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Sign-up failed: ${response.body}')),
-            );
-          }
-       // }
-       //  else {
-       //    ScaffoldMessenger.of(context).showSnackBar(
-       //      const SnackBar(content: Text('Invalid registration number')),
-       //    );
-       // }
+        if (response.statusCode == 200) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Sign-up successful')),
+          );
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const LoginScreen()),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Sign-up failed: ${response.body}')),
+          );
+        }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Sign-up error: $e')),
@@ -141,13 +117,13 @@ class _PharmacistSignupState extends State<PharmacistSignup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:const CommonAppBar(),
-      backgroundColor: Colors.grey.shade100,
+      appBar: const CommonAppBar(),
+      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Form(
-            key: _formKey, // Attach the form key for validation
+            key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -161,12 +137,11 @@ class _PharmacistSignupState extends State<PharmacistSignup> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                // Form fields with validation
-                TextFormField(
+                // Form fields using buildTextField
+                WidgetHelpers.buildTextField(
                   controller: _usernameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Username',
-                  ),
+                  label: 'Username',
+                  icon: Icons.person,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your username';
@@ -174,26 +149,27 @@ class _PharmacistSignupState extends State<PharmacistSignup> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
-                TextFormField(
+                WidgetHelpers.buildTextField(
                   controller: _emailController,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                  ),
+                  label: 'Email',
+                  icon: Icons.email,
                   validator: (value) {
                     if (value == null || value.isEmpty || !value.contains('@')) {
-                    return 'Please enter a valid email address';
+                      return 'Please enter a valid email address';
                     }
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
-                TextFormField(
+                WidgetHelpers.buildPasswordTextField(
                   controller: _passwordController,
+                  label: 'Password',
                   obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                  ),
+                  toggleVisibility: () {
+                    setState(() {
+                      _passwordController.text =
+                          _passwordController.text; // Just to trigger a rebuild
+                    });
+                  },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your password';
@@ -201,29 +177,10 @@ class _PharmacistSignupState extends State<PharmacistSignup> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _confirmPasswordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Confirm Password',
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your confirm password';
-                    }
-                    if (value != _passwordController.text) {
-                      return 'Password and Confirm Password do not match';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
+                WidgetHelpers.buildTextField(
                   controller: _pharmacyNameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Pharmacy Name',
-                  ),
+                  label: 'Pharmacy Name',
+                  icon: Icons.local_pharmacy,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your pharmacy name';
@@ -231,38 +188,38 @@ class _PharmacistSignupState extends State<PharmacistSignup> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _regNumberController,
-                  decoration:InputDecoration(
-                    labelText: 'Registration Number',
-                    suffixIcon:isCheckingRegNumber
-                        ? const CircularProgressIndicator()
-                        : isRegNumberValid
-                        ? const Icon(Icons.check, color: Colors.green)
-                        : const Icon(Icons.error, color: Colors.red),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: TextFormField(
+                    controller: _regNumberController,
+                    decoration: InputDecoration(
+                      labelText: 'Registration Number',
+                      prefixIcon: const Icon(Icons.assignment_ind),
+                      suffixIcon: isCheckingRegNumber
+                          ? const CircularProgressIndicator()
+                          : isRegNumberValid
+                          ? const Icon(Icons.check, color: Colors.green)
+                          : const Icon(Icons.error, color: Colors.red),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    onChanged: _onRegNumberChanged,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your registration number';
+                      }
+                      if (!isRegNumberValid) {
+                        return 'Invalid registration number';
+                      }
+                      return null;
+                    },
                   ),
-                  onChanged: _onRegNumberChanged,
-                  // onFieldSubmitted: (value) async {
-                  //   await _checkRegNumber();
-                  // },
-                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your registration number';
-                    }
-                    if (!isRegNumberValid) {
-                      return 'Invalid registration number';
-                    }
-                    return null;
-                  },
-
                 ),
-                const SizedBox(height: 16),
-                TextFormField(
+                WidgetHelpers.buildTextField(
                   controller: _addressController,
-                  decoration: const InputDecoration(
-                    labelText: 'Address Line 1',
-                  ),
+                  label: 'Address Line 1',
+                  icon: Icons.home,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your address';
@@ -270,38 +227,41 @@ class _PharmacistSignupState extends State<PharmacistSignup> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _cityController,
-                  decoration: const InputDecoration(
-                    labelText: 'City',
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your city';
-                    }
-                    return null;
-                  },
+                Row(
+                  children: [
+                    Expanded(
+                      child: WidgetHelpers.buildTextField(
+                        controller: _cityController,
+                        label: 'City',
+                        icon: Icons.location_city,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your city';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: WidgetHelpers.buildTextField(
+                        controller: _stateController,
+                        label: 'State',
+                        icon: Icons.map,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your state';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _stateController,
-                  decoration: const InputDecoration(
-                    labelText: 'State',
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your state';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
+                WidgetHelpers.buildTextField(
                   controller: _postalCodeController,
-                  decoration: const InputDecoration(
-                    labelText: 'Postal Code',
-                  ),
+                  label: 'Postal Code',
+                  icon: Icons.mail_outline,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your postal code';
@@ -310,17 +270,15 @@ class _PharmacistSignupState extends State<PharmacistSignup> {
                   },
                 ),
                 const SizedBox(height: 16),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(const Color(0xFF2E384D)),
-                    fixedSize: MaterialStateProperty.all(const Size(300, 20)),
-                  ),
+                // Sign-up button using buildCommonButton
+                WidgetHelpers.buildCommonButton(
+                  text: 'Sign Up',
                   onPressed: _signup,
-                  child: const Text("Sign Up",
-                    style:TextStyle(
-                      color:Colors.white,
-                    ),
-                  ),
+                  backgroundColor: Colors.blue,
+                  textColor: Colors.white,
+                  borderRadius: 10.0,
+                  paddingVertical: 16.0,
+                  paddingHorizontal: 32.0,
                 ),
               ],
             ),

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CardWidget extends StatelessWidget {
@@ -7,11 +6,11 @@ class CardWidget extends StatelessWidget {
   final Widget child;
 
   const CardWidget({
-    Key? key,
+    super.key,
     required this.elevation,
     required this.shape,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

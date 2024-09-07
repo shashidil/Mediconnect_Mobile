@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:medi_connect/Model/updateOrderRequest.dart';
 import '../Model/OrderDto.dart';
 import '../Sevices/API/OrderAPI.dart';
-import '../Sevices/Auth/UserSession.dart';
+import '../Widget/WidgetHelpers.dart';
 
 class UpdateOrderModal extends StatefulWidget {
   final Order order;
   final VoidCallback onUpdate;
 
-  const UpdateOrderModal({Key? key, required this.order, required this.onUpdate}) : super(key: key);
+  const UpdateOrderModal({super.key, required this.order, required this.onUpdate});
 
   @override
   _UpdateOrderModalState createState() => _UpdateOrderModalState();
@@ -16,51 +16,88 @@ class UpdateOrderModal extends StatefulWidget {
 
 class _UpdateOrderModalState extends State<UpdateOrderModal> {
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _trackingNumberController = TextEditingController();
   String? _status;
-  String? _trackingNumber;
   bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
     _status = widget.order.orderStatus;
-    _trackingNumber = widget.order.trackingNumber;
+    _trackingNumberController.text = widget.order.trackingNumber ?? '';
   }
 
   Future<void> _updateOrder() async {
-    if (!_formKey.currentState!.validate()) return;
-    _formKey.currentState!.save();
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      // Create an instance of UpdateOrderRequest
-      final updateRequest = UpdateOrderRequest(
-        status: _status!,
-        trackingNumber: _trackingNumber,
-      );
-      final userId = int.parse(await UserSession.getUserId() ?? '0');
-      // Call the updateOrder API with the constructed request
-      await OrderAPI.updateOrder(widget.order.id, updateRequest); // Fix here: Use order.id instead of userId
-
-      // Call the callback to refresh the orders and close the modal
-      widget.onUpdate();
-      Navigator.of(context).pop(true); // Return true to indicate the order was updated
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to update order: $e')));
-    } finally {
+    if (_formKey.currentState!.validate()) {
       setState(() {
-        _isLoading = false;
+        _isLoading = true;
       });
+
+      bool statusUpdated = false;
+      bool trackingNumberUpdated = false;
+
+      try {
+        // Create an instance of UpdateOrderRequest with the current status and tracking number
+        final updateRequest = UpdateOrderRequest(
+          status: _status!,
+          trackingNumber: _trackingNumberController.text,
+        );
+
+        await OrderAPI.updateOrder(widget.order.id, updateRequest);
+        print(updateRequest.trackingNumber);
+        // Check if the status was updated
+        if (_status != widget.order.orderStatus) {
+          statusUpdated = true;
+        }
+
+        // Check if the tracking number was updated
+        if (_trackingNumberController.text != widget.order.trackingNumber) {
+          trackingNumberUpdated = true;
+        }
+
+        // Display appropriate messages
+        if (statusUpdated && trackingNumberUpdated) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Order status and tracking number updated successfully!')),
+          );
+        } else if (statusUpdated) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Order status updated successfully!')),
+          );
+        } else if (trackingNumberUpdated) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Tracking number updated successfully!')),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('No changes were made.')),
+          );
+        }
+
+        // Call the callback to refresh the orders
+        widget.onUpdate();
+        Navigator.of(context).pop(true); // Return true to indicate the order was updated
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update order: $e')),
+        );
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
-  // Ensure that the status change is valid
+
   bool _validateStatusChange(String newStatus) {
     if (_status == 'Shipped' && newStatus == 'Awaiting Shipment') {
       return false; // Can't go back to "Awaiting Shipment"
+    } else if (_status == 'Complete' && newStatus == 'Shipped') {
+      return false; // Can't go back to "Shipped" after "Complete"
+    } else if (_status == 'Cancelled' &&
+        (newStatus == 'Shipped' || newStatus == 'Complete' || newStatus == 'Awaiting Shipment')) {
+      return false; // Can't go back to any status after "Cancelled"
     }
     return true;
   }
@@ -68,9 +105,9 @@ class _UpdateOrderModalState extends State<UpdateOrderModal> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Update Order'),
+      title: const Text('Update Order'),
       content: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -88,19 +125,19 @@ class _UpdateOrderModalState extends State<UpdateOrderModal> {
                       _status = value;
                     });
                   } else {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('Cannot revert status to "Awaiting Shipment" after it has been shipped.'),
-                    ));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Cannot revert status.')),
+                    );
                   }
                 },
-                decoration: InputDecoration(labelText: 'Order Status'),
+                decoration: const InputDecoration(labelText: 'Order Status'),
                 validator: (value) => value == null ? 'Please select a status' : null,
               ),
-              SizedBox(height: 10),
-              TextFormField(
-                initialValue: _trackingNumber,
-                onSaved: (value) => _trackingNumber = value,
-                decoration: InputDecoration(labelText: 'Tracking Number'),
+              const SizedBox(height: 10),
+              WidgetHelpers.buildTextField(
+                controller: _trackingNumberController,
+                label: 'Tracking Number',
+                icon: Icons.local_shipping,
               ),
             ],
           ),
@@ -109,11 +146,11 @@ class _UpdateOrderModalState extends State<UpdateOrderModal> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: Text('Cancel'),
+          child: const Text('Cancel'),
         ),
         ElevatedButton(
           onPressed: _updateOrder,
-          child: Text('Update'),
+          child: const Text('Update'),
         ),
       ],
     );

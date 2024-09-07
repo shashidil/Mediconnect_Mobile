@@ -8,6 +8,7 @@ class ResponseData {
   final double distance;
   final double? total;            // Nullable Double
   final int? pharmacistId;        // Nullable Integer
+  final int prescriptionId;        // Nullable Integer
   final double pharmacistLatitude;
   final double pharmacistLongitude;
   final double customerLatitude;
@@ -21,6 +22,7 @@ class ResponseData {
     required this.distance,
     this.total,           // Nullable
     this.pharmacistId,    // Nullable
+    required this.prescriptionId,    // Nullable
     required this.pharmacistLatitude,
     required this.pharmacistLongitude,
     required this.customerLatitude,
@@ -40,6 +42,7 @@ class ResponseData {
       distance: json['distance'].toDouble(),
       total: json['total']?.toDouble(),  // Nullable Double
       pharmacistId: json['pharmacistId'] as int?, // Nullable Integer
+      prescriptionId: json['prescriptionId'] , // Nullable Integer
       pharmacistLatitude: json['pharmacistLatitude'].toDouble(),
       pharmacistLongitude: json['pharmacistLongitude'].toDouble(),
       customerLatitude: json['customerLatitude'].toDouble(),
