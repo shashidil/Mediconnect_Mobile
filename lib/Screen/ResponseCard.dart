@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../Model/ResponseData.dart';
 import '../Widget/WidgetHelpers.dart';
+import 'PaymentScreen.dart';
 
 class ResponseCard extends StatelessWidget {
   final ResponseData data;
-  final VoidCallback onOrderSuccess;
 
-  const ResponseCard({super.key, required this.data, required this.onOrderSuccess});
+  const ResponseCard({super.key, required this.data});
 
   void _openGoogleMaps() async {
     final Uri url = Uri.parse(
@@ -21,8 +21,12 @@ class ResponseCard extends StatelessWidget {
   }
 
   void _orderMedications(BuildContext context) {
-    // Logic to order medications, upon success:
-    onOrderSuccess();  // Call the success callback to remove the card
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PaymentScreen(data: data),
+      ),
+    );
   }
 
   void _showDetailsModal(BuildContext context) {

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:medi_connect/Screen/SendInquiryPage.dart';
+import 'package:medi_connect/Screen/uploadPrescription.dart';
 
 class PatientOverviewPage extends StatelessWidget {
   const PatientOverviewPage({super.key});
@@ -120,7 +122,12 @@ class PatientOverviewPage extends StatelessWidget {
               child: Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    // Navigate to the relevant page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => UploadPrescription(),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
@@ -129,6 +136,7 @@ class PatientOverviewPage extends StatelessWidget {
                     ),
                   ),
                   child: const Text("Get Started"),
+
                 ),
               ),
             ),
@@ -147,7 +155,12 @@ class PatientOverviewPage extends StatelessWidget {
                     const SizedBox(height: 10),
                     ElevatedButton.icon(
                       onPressed: () {
-                        // Navigate to support page or dial support number
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SendInquiryPage(),
+                          ),
+                        );
                       },
                       icon: const Icon(Icons.phone),
                       label: const Text("Contact Support"),

@@ -168,11 +168,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 WidgetHelpers.buildCommonButton(
                   text: 'Login',
                   onPressed: _login,
-                  backgroundColor: Colors.blue,
+                  backgroundColor: const Color(0xFF2E384D),
                   textColor: Colors.white,
                   borderRadius: 10.0,
                   paddingVertical: 16.0,
-                  paddingHorizontal: 5,
+                  paddingHorizontal: 50,
                 ),
                 const SizedBox(height: 20),
                 Row(

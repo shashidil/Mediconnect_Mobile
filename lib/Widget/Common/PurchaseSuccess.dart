@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medi_connect/Screen/Resposes.dart';
 
 class PurchaseSuccess extends StatelessWidget {
   final String orderNumber;
@@ -6,7 +7,12 @@ class PurchaseSuccess extends StatelessWidget {
   const PurchaseSuccess({super.key, required this.orderNumber});
 
   void backToDashboard(BuildContext context) {
-    Navigator.of(context).popUntil((route) => route.isFirst); // Replace with actual navigation logic
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ResponseScreen(),
+      ),
+    );
   }
 
   @override

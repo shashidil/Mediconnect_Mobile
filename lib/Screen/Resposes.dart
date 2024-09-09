@@ -91,7 +91,7 @@ class _ResponseScreenState extends State<ResponseScreen> {
               itemBuilder: (context, index) {
                 return ResponseCard(
                   data: _responseData[index],
-                  onOrderSuccess: () => _removeResponseByPrescriptionId(_responseData[index].prescriptionId),
+
                 );
               },
             );
